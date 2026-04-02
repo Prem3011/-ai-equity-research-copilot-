@@ -4,123 +4,182 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>AI Equity Research Copilot | By Prem</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
+:root{--bg:#f0f4f8;--card:#ffffff;--text:#0f172a;--muted:#64748b;--border:#e2e8f0;--accent:#0ea5e9;--accent2:#0284c7;--accent-light:#f0f9ff;--green:#059669;--red:#dc2626;--amber:#d97706}
+[data-theme="dark"]{--bg:#0b1120;--card:#131b2e;--text:#e2e8f0;--muted:#94a3b8;--border:#1e293b;--accent:#38bdf8;--accent2:#7dd3fc;--accent-light:#0c1a2e;--green:#34d399;--red:#f87171;--amber:#fbbf24}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:system-ui,-apple-system,sans-serif;background:#f5f4ff;color:#333;min-height:100vh}
-.wrap{max-width:820px;margin:0 auto;padding:0 16px 40px}
-.hdr{background:linear-gradient(135deg,#1E1850 0%,#3B2FA0 40%,#534AB7 100%);border-radius:0 0 18px 18px;padding:30px 24px 22px;text-align:center;position:relative;overflow:hidden}
-.hdr .c1{position:absolute;top:-40px;right:-40px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.04)}
-.hdr .c2{position:absolute;bottom:-25px;left:-25px;width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.03)}
-.hdr .tag{font-size:10px;font-weight:700;color:#AFA9EC;letter-spacing:2.5px;margin-bottom:8px}
-.hdr h1{font-size:24px;font-weight:700;color:#fff;margin:0 0 6px}
-.hdr p{font-size:12px;color:#CECBF6;margin:0 0 12px}
-.hdr .help-btn{display:inline-block;padding:4px 14px;font-size:10px;font-weight:600;background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2);border-radius:20px;cursor:pointer}
-.guide{background:#f9f8ff;border:1px solid #e8e6f8;border-radius:12px;padding:16px;margin:14px 0;font-size:12.5px;color:#555;line-height:1.7;display:none}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .3s,color .3s}
+.wrap{max-width:880px;margin:0 auto;padding:0 20px 50px}
+.hdr{background:linear-gradient(135deg,#020617 0%,#0c1a3d 20%,#0c4a6e 50%,#0ea5e9 80%,#38bdf8 100%);border-radius:0 0 24px 24px;padding:36px 28px 28px;text-align:center;position:relative;overflow:hidden}
+.hdr .c1{position:absolute;top:-50px;right:-50px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.03)}
+.hdr .c2{position:absolute;bottom:-30px;left:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.02)}
+.hdr .c3{position:absolute;top:30px;left:80px;width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,.015)}
+.hdr .c4{position:absolute;bottom:40px;right:100px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.02)}
+.hdr .tag{font-size:11px;font-weight:700;color:#7dd3fc;letter-spacing:3px;margin-bottom:10px}
+.hdr h1{font-size:28px;font-weight:800;color:#fff;margin:0 0 8px;letter-spacing:-.5px}
+.hdr p{font-size:13px;color:#bae6fd;margin:0 0 16px;line-height:1.5}
+.hdr-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.hdr-btn{padding:6px 16px;font-size:11px;font-weight:600;background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.15);border-radius:24px;cursor:pointer;transition:all .2s;backdrop-filter:blur(4px)}
+.hdr-btn:hover{background:rgba(255,255,255,.2)}
+.theme-toggle{position:absolute;top:16px;right:20px;padding:6px 10px;font-size:14px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;cursor:pointer;color:#fff}
+.guide{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin:16px 0;font-size:13px;color:var(--muted);line-height:1.8;display:none;box-shadow:0 2px 12px rgba(0,0,0,.04)}
 .guide.show{display:block}
-.guide b{color:#534AB7}
-.tabs{display:flex;background:#fff;border-radius:12px;border:1px solid #e8e6f8;overflow:hidden;margin:16px 0 12px}
-.tab{flex:1;padding:10px;text-align:center;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;color:#888}
-.tab.active{background:#534AB7;color:#fff}
-.tab:hover:not(.active){background:#f4f3ff}
+.guide b{color:var(--accent)}
+.guide h3{font-size:14px;color:var(--text);margin-bottom:8px}
+.tabs{display:flex;background:var(--card);border-radius:14px;border:1px solid var(--border);overflow:hidden;margin:18px 0 14px;box-shadow:0 1px 4px rgba(0,0,0,.03)}
+.tab{flex:1;padding:12px;text-align:center;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;color:var(--muted)}
+.tab.active{background:var(--accent);color:#fff}
+.tab:hover:not(.active){background:var(--accent-light)}
 .panel{display:none}.panel.show{display:block}
-.input-row{display:flex;gap:8px;margin-bottom:8px}
-.input-row input{flex:1;padding:12px 16px;font-size:15px;border:2px solid #e0e0e0;border-radius:10px;outline:none;font-weight:500;background:#fff}
-.input-row input:focus{border-color:#534AB7}
-.input-row button{padding:12px 24px;font-size:14px;font-weight:700;color:#fff;background:linear-gradient(135deg,#534AB7,#3B2FA0);border:none;border-radius:10px;cursor:pointer;white-space:nowrap}
-.input-row button:disabled{background:#c8c6db;cursor:not-allowed}
-.compare-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
-.compare-row input{padding:12px 16px;font-size:14px;border:2px solid #e0e0e0;border-radius:10px;outline:none;font-weight:500;background:#fff}
-.compare-row input:first-child:focus{border-color:#534AB7}
+.input-row{display:flex;gap:10px;margin-bottom:10px}
+.input-row input{flex:1;padding:14px 18px;font-size:16px;border:2px solid var(--border);border-radius:12px;outline:none;font-weight:500;background:var(--card);color:var(--text);transition:border-color .2s}
+.input-row input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(83,74,183,.1)}
+.input-row button{padding:14px 28px;font-size:15px;font-weight:700;color:#fff;background:linear-gradient(135deg,#0ea5e9,#0284c7);border:none;border-radius:12px;cursor:pointer;white-space:nowrap;transition:all .2s;box-shadow:0 4px 12px rgba(14,165,233,.3)}
+.input-row button:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 6px 16px rgba(14,165,233,.4)}
+.input-row button:disabled{background:#c8c6db;cursor:not-allowed;box-shadow:none}
+.compare-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.compare-row input{padding:14px 18px;font-size:15px;border:2px solid var(--border);border-radius:12px;outline:none;font-weight:500;background:var(--card);color:var(--text)}
+.compare-row input:first-child:focus{border-color:var(--accent)}
 .compare-row input:last-child:focus{border-color:#D85A30}
-.picks{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:16px}
-.picks button{padding:4px 11px;font-size:11px;font-weight:500;background:#fff;color:#534AB7;border:1px solid #e8e6f8;border-radius:14px;cursor:pointer;transition:all .2s}
-.picks button:hover{background:#534AB7;color:#fff}
-.picks button.active{background:#534AB7;color:#fff}
-.loading{text-align:center;padding:36px 20px}
-.spinner{width:42px;height:42px;margin:0 auto 14px;border:3px solid #ededfa;border-top:3px solid #534AB7;border-radius:50%;animation:spin .7s linear infinite}
+.compare-btn{width:100%;padding:14px;font-size:15px;font-weight:700;color:#fff;background:linear-gradient(135deg,#f97316,#ea580c);border:none;border-radius:12px;cursor:pointer;margin-bottom:10px;box-shadow:0 4px 12px rgba(249,115,22,.3);transition:all .2s}
+.compare-btn:hover:not(:disabled){transform:translateY(-1px)}
+.compare-btn:disabled{background:#c8c6db;box-shadow:none}
+.picks{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+.picks button{padding:6px 14px;font-size:12px;font-weight:600;background:var(--card);color:var(--accent);border:1.5px solid var(--border);border-radius:20px;cursor:pointer;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.03)}
+.picks button:hover{background:var(--accent);color:#fff;border-color:var(--accent);transform:translateY(-1px);box-shadow:0 3px 8px rgba(83,74,183,.2)}
+.picks button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.loading{text-align:center;padding:50px 20px}
+.spinner-wrap{width:56px;height:56px;margin:0 auto 20px;position:relative}
+.spinner{width:56px;height:56px;border:3px solid var(--border);border-top:3px solid var(--accent);border-radius:50%;animation:spin .8s cubic-bezier(.5,.1,.5,.9) infinite}
+.spinner2{position:absolute;top:8px;left:8px;width:40px;height:40px;border:2px solid var(--border);border-bottom:2px solid var(--accent2);border-radius:50%;animation:spin 1.2s cubic-bezier(.5,.1,.5,.9) infinite reverse}
 @keyframes spin{to{transform:rotate(360deg)}}
-.loading h3{font-size:15px;font-weight:600;color:#534AB7}
-.loading p{font-size:12px;color:#888;margin-top:4px}
-.pbar{width:200px;height:4px;background:#eae8f8;border-radius:2px;margin:12px auto 0;overflow:hidden}
-.pbar-fill{height:100%;background:linear-gradient(90deg,#534AB7,#7F77DD);border-radius:2px;transition:width .4s}
-.error{padding:14px 16px;background:#FFF5F5;border:1px solid #F09595;border-radius:10px;color:#791F1F;font-size:13px;margin-bottom:16px;line-height:1.6}
-.error button{display:inline-block;margin-top:8px;padding:6px 16px;font-size:12px;font-weight:600;background:#791F1F;color:#fff;border:none;border-radius:6px;cursor:pointer}
-.result-hdr{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px}
-.result-hdr h2{font-size:20px;font-weight:800;color:#111}
-.toolbar{display:flex;gap:8px;margin:8px 0 14px;flex-wrap:wrap}
-.btn-pdf{padding:6px 14px;font-size:11px;font-weight:600;border-radius:8px;cursor:pointer;background:#534AB7;color:#fff;border:none}
-.btn-new{padding:6px 14px;font-size:11px;font-weight:600;border-radius:8px;cursor:pointer;background:#fff;color:#534AB7;border:1px solid #e8e6f8}
-.badge{padding:3px 12px;border-radius:12px;font-size:11px;font-weight:700;display:inline-block}
-.badge-bull{background:#DCFCE7;color:#166534}
-.badge-bear{background:#FEE2E2;color:#991B1B}
-.badge-neutral{background:#FEF9C3;color:#854D0E}
-.meta{font-size:11px;color:#aaa;margin-bottom:14px}
-.sec{margin-bottom:14px}
-.sec-hdr{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.sec-hdr .icon{font-size:14px}
-.sec-hdr .label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.3px}
-.sec-hdr .line{flex:1;height:1px}
-.sec-hdr .hint{font-size:10px;padding:1px 7px;border-radius:8px;cursor:help;opacity:.5}
-.sec-body{font-size:13.5px;line-height:1.8;color:#333}
-.metric-row{display:flex;justify-content:space-between;align-items:baseline;padding:9px 14px;border-radius:8px;margin-bottom:3px;border:1px solid #e8f5ef}
-.metric-row:nth-child(odd){background:#f8fcfa}
-.metric-row:nth-child(even){background:#fff}
-.metric-label{font-size:11px;color:#666;font-weight:600;text-transform:uppercase;letter-spacing:.2px}
-.metric-val{font-size:15px;font-weight:700;color:#085041}
-.catalyst{position:relative;padding-left:22px;margin-bottom:12px}
-.catalyst .dot{position:absolute;left:0;top:5px;width:10px;height:10px;border-radius:50%;background:#534AB7;border:2px solid #EEEDFE}
-.catalyst .date{font-size:10.5px;font-weight:700;color:#534AB7;text-transform:uppercase;letter-spacing:.3px}
-.catalyst .desc{font-size:13px;line-height:1.7;color:#333;margin-top:2px}
-.risk-card{padding:12px 16px;background:#FFF8F8;border-radius:10px;border-left:3px solid #F09595;margin-bottom:7px}
-.risk-title{font-size:12.5px;font-weight:700;color:#991B1B;margin-bottom:3px}
-.risk-detail{font-size:12.5px;line-height:1.7;color:#555}
-.split{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.bull-box{padding:14px;background:#F0FDF4;border-radius:10px;border:1px solid #BBF7D0}
-.bear-box{padding:14px;background:#FEF2F2;border-radius:10px;border:1px solid #FECACA}
-.case-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
-.bull-label{color:#166534}
-.bear-label{color:#991B1B}
-.case-text{font-size:12.5px;line-height:1.8;color:#333}
-.peer{padding:12px 16px;border-radius:10px;margin-bottom:5px;border:1px solid #fde8df}
-.peer:nth-child(odd){background:#FFFAF8}
-.peer:nth-child(even){background:#fff}
-.peer-name{font-size:13px;font-weight:700;color:#9A3412}
-.peer-desc{font-size:12.5px;line-height:1.7;color:#555;margin-top:3px}
-.thesis-box{padding:16px 18px;background:linear-gradient(135deg,#F0FDF4,#ECFDF5);border-radius:12px;border:1px solid #A7F3D0;font-size:13.5px;line-height:1.85;color:#1a1a1a}
-.disc{margin-top:18px;padding:12px;background:#f0f0f0;border-radius:8px;font-size:10px;color:#999;text-align:center;line-height:1.5}
-.footer{margin-top:24px;padding-top:14px;border-top:1px solid #e8e8e8;text-align:center;font-size:10px;color:#ccc}
-.compare-results{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.empty{text-align:center;padding:36px 0;color:#ccc}
-.empty .big{font-size:40px;opacity:.2;margin-bottom:8px}
-.empty p{font-size:13px}
-.empty .sub{font-size:11px;color:#ddd;margin-top:4px}
-@media(max-width:700px){.split{grid-template-columns:1fr}.compare-results{grid-template-columns:1fr}.compare-row{grid-template-columns:1fr}}
+.loading h3{font-size:17px;font-weight:700;color:var(--accent)}
+.loading p{font-size:13px;color:var(--muted);margin-top:6px}
+.pbar{width:240px;height:5px;background:var(--border);border-radius:3px;margin:16px auto 0;overflow:hidden}
+.pbar-fill{height:100%;background:linear-gradient(90deg,var(--accent),#7F77DD);border-radius:3px;transition:width .5s ease}
+.step-dots{display:flex;justify-content:center;gap:6px;margin-top:12px}
+.step-dot{width:8px;height:8px;border-radius:50%;background:var(--border);transition:all .3s}
+.step-dot.on{background:var(--accent);transform:scale(1.2)}
+.error{padding:16px 20px;background:#FFF5F5;border:1px solid #F09595;border-radius:14px;color:#791F1F;font-size:14px;margin-bottom:18px;line-height:1.6}
+[data-theme="dark"] .error{background:#2d1b1b;border-color:#5c2020;color:#fca5a5}
+.error button{display:inline-block;margin-top:10px;padding:8px 20px;font-size:13px;font-weight:600;background:#791F1F;color:#fff;border:none;border-radius:8px;cursor:pointer}
+.result-hdr{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.result-hdr h2{font-size:24px;font-weight:800;color:var(--text);letter-spacing:-.3px}
+.toolbar{display:flex;gap:8px;margin:10px 0 16px;flex-wrap:wrap}
+.toolbar button{padding:8px 16px;font-size:12px;font-weight:600;border-radius:10px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:4px}
+.btn-pdf{background:var(--accent);color:#fff;border:none;box-shadow:0 2px 8px rgba(14,165,233,.2)}
+.btn-pdf:hover{transform:translateY(-1px)}
+.btn-share{background:var(--card);color:var(--accent);border:1.5px solid var(--border)}
+.btn-share:hover{background:var(--accent-light)}
+.btn-save{background:var(--card);color:var(--amber);border:1.5px solid var(--border)}
+.btn-save:hover{background:#fffbeb}
+.btn-new{background:var(--card);color:var(--accent);border:1.5px solid var(--border)}
+.btn-new:hover{background:var(--accent-light)}
+.badge{padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:4px}
+.badge-bull{background:#dcfce7;color:#166534}
+.badge-bear{background:#fee2e2;color:#991b1b}
+.badge-neutral{background:#fef9c3;color:#854d0e}
+[data-theme="dark"] .badge-bull{background:#052e16;color:#4ade80}
+[data-theme="dark"] .badge-bear{background:#2d0a0a;color:#f87171}
+[data-theme="dark"] .badge-neutral{background:#2d2305;color:#fbbf24}
+.meta{font-size:12px;color:var(--muted);margin-bottom:16px}
+.sec{margin-bottom:16px;background:var(--card);border-radius:14px;border:1px solid var(--border);overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.03);transition:box-shadow .2s}
+.sec:hover{box-shadow:0 4px 16px rgba(0,0,0,.06)}
+.sec-hdr{display:flex;align-items:center;gap:10px;padding:12px 18px;border-bottom:1px solid var(--border)}
+.sec-hdr .icon{font-size:16px}
+.sec-hdr .label{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.sec-hdr .line{flex:1}
+.sec-hdr .hint{font-size:10px;padding:2px 8px;border-radius:10px;cursor:help;opacity:.4;background:var(--accent-light);color:var(--accent)}
+.sec-body{padding:16px 18px;font-size:14px;line-height:1.85;color:var(--text)}
+.metric-row{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-radius:10px;margin-bottom:4px;border:1px solid #e0f2eb;transition:background .2s}
+.metric-row:nth-child(odd){background:#f0faf5}
+.metric-row:nth-child(even){background:var(--card)}
+[data-theme="dark"] .metric-row:nth-child(odd){background:#0d1f17;border-color:#1a3328}
+[data-theme="dark"] .metric-row{border-color:#1a3328}
+.metric-label{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.3px}
+.metric-val{font-size:16px;font-weight:800;color:#059669}
+[data-theme="dark"] .metric-val{color:#4ade80}
+.catalyst{position:relative;padding-left:24px;margin-bottom:14px}
+.catalyst .dot{position:absolute;left:0;top:6px;width:11px;height:11px;border-radius:50%;background:var(--accent);border:2px solid var(--accent-light);box-shadow:0 0 0 3px rgba(14,165,233,.1)}
+.catalyst .date{font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.4px}
+.catalyst .desc{font-size:13.5px;line-height:1.75;color:var(--text);margin-top:3px}
+.risk-card{padding:14px 18px;background:#fff5f5;border-radius:12px;border-left:4px solid #f87171;margin-bottom:8px;transition:transform .2s}
+.risk-card:hover{transform:translateX(4px)}
+[data-theme="dark"] .risk-card{background:#1f0d0d;border-left-color:#ef4444}
+.risk-title{font-size:13px;font-weight:700;color:#dc2626;margin-bottom:4px}
+[data-theme="dark"] .risk-title{color:#f87171}
+.risk-detail{font-size:13px;line-height:1.75;color:var(--muted)}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.bull-box{padding:16px;background:#f0fdf4;border-radius:14px;border:1.5px solid #86efac;transition:transform .2s}
+.bear-box{padding:16px;background:#fef2f2;border-radius:14px;border:1.5px solid #fca5a5;transition:transform .2s}
+.bull-box:hover,.bear-box:hover{transform:translateY(-2px)}
+[data-theme="dark"] .bull-box{background:#052e16;border-color:#166534}
+[data-theme="dark"] .bear-box{background:#2d0a0a;border-color:#991b1b}
+.case-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.bull-label{color:#16a34a}
+.bear-label{color:#dc2626}
+[data-theme="dark"] .bull-label{color:#4ade80}
+[data-theme="dark"] .bear-label{color:#f87171}
+.case-text{font-size:13px;line-height:1.85;color:var(--text)}
+.peer{padding:14px 18px;border-radius:12px;margin-bottom:6px;border:1px solid #fed7aa;background:#fffbf0;transition:transform .2s}
+.peer:hover{transform:translateX(4px)}
+[data-theme="dark"] .peer{background:#1f1505;border-color:#78350f}
+.peer-name{font-size:14px;font-weight:700;color:#c2410c}
+[data-theme="dark"] .peer-name{color:#fb923c}
+.peer-desc{font-size:13px;line-height:1.75;color:var(--muted);margin-top:4px}
+.moat-box{margin-top:12px;padding:14px 18px;background:#fff7ed;border-radius:12px;border:1.5px solid #fdba74}
+[data-theme="dark"] .moat-box{background:#1f1505;border-color:#92400e}
+.thesis-box{padding:20px;background:linear-gradient(135deg,#f0fdf4,#ecfdf5);border-radius:14px;border:1.5px solid #86efac;font-size:14px;line-height:1.9;color:var(--text)}
+[data-theme="dark"] .thesis-box{background:linear-gradient(135deg,#052e16,#042f2e);border-color:#166534}
+.disc{margin-top:20px;padding:14px;background:var(--card);border:1px solid var(--border);border-radius:12px;font-size:11px;color:var(--muted);text-align:center;line-height:1.5}
+.footer{margin-top:28px;padding-top:16px;border-top:1px solid var(--border);text-align:center;font-size:11px;color:var(--muted)}
+.compare-results{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.empty{text-align:center;padding:50px 0;color:var(--muted)}
+.empty .big{font-size:48px;opacity:.15;margin-bottom:12px}
+.empty p{font-size:14px;font-weight:500}
+.empty .sub{font-size:12px;opacity:.6;margin-top:6px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);padding:10px 20px;background:#1a1a2e;color:#fff;border-radius:10px;font-size:13px;font-weight:500;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+@media(max-width:700px){.split{grid-template-columns:1fr}.compare-results{grid-template-columns:1fr}.compare-row{grid-template-columns:1fr}.hdr h1{font-size:22px}.hdr p{font-size:11px}.input-row input{font-size:14px;padding:12px 14px}.input-row button{padding:12px 18px;font-size:13px}.result-hdr h2{font-size:20px}.sec-body{padding:14px 16px;font-size:13px}.metric-val{font-size:14px}.toolbar{gap:6px}.toolbar button{padding:6px 12px;font-size:11px}}
+@media print{.hdr,.tabs,.input-row,.picks,.toolbar,.guide,.footer,.compare-row,.compare-btn,.theme-toggle,.hdr-btns{display:none!important}.sec{break-inside:avoid;box-shadow:none;border:1px solid #ddd}.wrap{max-width:100%;padding:0}}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="hdr">
-    <div class="c1"></div><div class="c2"></div>
+    <div class="c1"></div><div class="c2"></div><div class="c3"></div><div class="c4"></div>
+    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">🌙</button>
     <div class="tag">AI-POWERED EQUITY RESEARCH</div>
     <h1>Equity Research Copilot</h1>
-    <p>Professional-grade research briefs in seconds • Any stock, any market</p>
-    <span class="help-btn" onclick="document.getElementById('guide').classList.toggle('show')">How does this work? →</span>
+    <p>Professional-grade research briefs powered by AI<br>Any stock • Any market • Instant analysis</p>
+    <div class="hdr-btns">
+      <span class="hdr-btn" onclick="document.getElementById('guide').classList.toggle('show')">📖 How it works</span>
+      <span class="hdr-btn" onclick="document.getElementById('ticker').focus()">🚀 Start analyzing</span>
+    </div>
   </div>
+
   <div class="guide" id="guide">
-    <b>Welcome!</b> This tool generates AI-powered equity research briefs — similar to what analysts at investment banks produce.<br><br>
-    <b>How to use:</b> Type any stock ticker (like AAPL for Apple, or RELIANCE for Reliance Industries) and click Generate.<br><br>
-    <b>Single vs Compare:</b> Use <b>Single Stock</b> for a deep-dive. Use <b>Compare Stocks</b> to analyze two companies side by side.<br><br>
-    <b>Quick glossary:</b><br>
-    • <b>P/E Ratio</b> — Price-to-Earnings. How much investors pay per dollar of earnings.<br>
-    • <b>Market Cap</b> — Total value of all shares.<br>
-    • <b>ROE</b> — Return on Equity. How efficiently the company uses shareholder money.<br>
-    • <b>Bull Case</b> — Reasons to buy. <b>Bear Case</b> — Reasons to avoid.<br>
-    • <b>Outlook</b> — Overall verdict: Bullish, Neutral, or Bearish.
+    <h3>📖 Welcome to the Equity Research Copilot</h3>
+    This tool generates AI-powered equity research briefs — similar to what analysts at investment banks produce. Just type any stock ticker and get a comprehensive analysis in seconds.<br><br>
+    <h3>🔍 How to use</h3>
+    <b>Single Stock:</b> Type a ticker (like AAPL for Apple or RELIANCE for Reliance Industries) and click Generate.<br>
+    <b>Compare:</b> Switch to the Compare tab to analyze two companies side by side.<br>
+    <b>Export:</b> Download as PDF, share via link, or bookmark for later.<br><br>
+    <h3>📊 Financial terms explained</h3>
+    • <b>P/E Ratio</b> — Price-to-Earnings. How much investors pay per dollar of profit. Lower often means cheaper.<br>
+    • <b>Market Cap</b> — Total value of all company shares. Shows how big the company is.<br>
+    • <b>ROE</b> — Return on Equity. How well the company turns shareholder money into profit. Higher is better.<br>
+    • <b>Debt/Equity</b> — How much debt vs shareholder money. Lower is generally safer.<br>
+    • <b>Bull Case</b> — Reasons the stock could go UP. <b>Bear Case</b> — Reasons it could go DOWN.<br>
+    • <b>Outlook</b> — The AI's overall verdict: 🟢 Bullish (positive), 🟡 Neutral, or 🔴 Bearish (negative).
   </div>
+
   <div class="tabs">
     <div class="tab active" onclick="switchTab('single')">📊 Single Stock</div>
     <div class="tab" onclick="switchTab('compare')">⚖️ Compare Stocks</div>
   </div>
+
   <div class="panel show" id="panel-single">
     <div class="input-row">
       <input id="ticker" placeholder="Enter any stock ticker (AAPL, RELIANCE, NVDA...)" />
@@ -129,43 +188,75 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#f5f4ff;color:#33
     <div class="picks" id="picks-single"></div>
     <div id="output-single"></div>
   </div>
+
   <div class="panel" id="panel-compare">
     <div class="compare-row">
       <input id="ticker-a" placeholder="Stock A (e.g. AAPL)" />
       <input id="ticker-b" placeholder="Stock B (e.g. MSFT)" />
     </div>
-    <button id="go-compare" onclick="analyzeCompare()" style="width:100%;padding:12px;font-size:14px;font-weight:700;color:#fff;background:linear-gradient(135deg,#D85A30,#993C1D);border:none;border-radius:10px;cursor:pointer;margin-bottom:8px">Compare →</button>
+    <button class="compare-btn" id="go-compare" onclick="analyzeCompare()">Compare →</button>
     <div class="picks" id="picks-compare"></div>
     <div id="output-compare"></div>
   </div>
-  <div class="footer">Built by Prem • AI Equity Research Copilot • Powered by Gemini AI</div>
+
+  <div class="footer">Built by Prem Acharya • AI Equity Research Copilot • Powered by Gemini AI</div>
 </div>
+<div class="toast" id="toast"></div>
+
 <script>
-const picks=[{t:"AAPL",n:"Apple",f:"🇺🇸"},{t:"NVDA",n:"Nvidia",f:"🇺🇸"},{t:"MSFT",n:"Microsoft",f:"🇺🇸"},{t:"GOOGL",n:"Alphabet",f:"🇺🇸"},{t:"TSLA",n:"Tesla",f:"🇺🇸"},{t:"AMZN",n:"Amazon",f:"🇺🇸"},{t:"RELIANCE",n:"Reliance",f:"🇮🇳"},{t:"TCS",n:"TCS",f:"🇮🇳"},{t:"INFY",n:"Infosys",f:"🇮🇳"},{t:"HDFCBANK",n:"HDFC Bank",f:"🇮🇳"},{t:"ITC",n:"ITC",f:"🇮🇳"},{t:"WIPRO",n:"Wipro",f:"🇮🇳"}];
+function toggleTheme(){const d=document.documentElement;const t=d.getAttribute("data-theme")==="dark"?"light":"dark";d.setAttribute("data-theme",t);document.querySelector(".theme-toggle").textContent=t==="dark"?"☀️":"🌙";localStorage.setItem("theme",t);}
+if(localStorage.getItem("theme")==="dark")document.documentElement.setAttribute("data-theme","dark");
+if(window.matchMedia&&window.matchMedia("(prefers-color-scheme:dark)").matches&&!localStorage.getItem("theme"))document.documentElement.setAttribute("data-theme","dark");
+if(document.documentElement.getAttribute("data-theme")==="dark")document.querySelector(".theme-toggle").textContent="☀️";
+
+function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2500);}
+
+const saved=JSON.parse(localStorage.getItem("savedBriefs")||"[]");
+
+const picks=[{t:"AAPL",f:"🇺🇸"},{t:"NVDA",f:"🇺🇸"},{t:"MSFT",f:"🇺🇸"},{t:"GOOGL",f:"🇺🇸"},{t:"TSLA",f:"🇺🇸"},{t:"AMZN",f:"🇺🇸"},{t:"RELIANCE",f:"🇮🇳"},{t:"TCS",f:"🇮🇳"},{t:"INFY",f:"🇮🇳"},{t:"HDFCBANK",f:"🇮🇳"},{t:"ITC",f:"🇮🇳"},{t:"WIPRO",f:"🇮🇳"}];
 const comparePairs=[{a:"AAPL",b:"MSFT"},{a:"RELIANCE",b:"TCS"},{a:"NVDA",b:"GOOGL"},{a:"INFY",b:"WIPRO"}];
-const secStyles={overview:{ic:"🏢",c:"#0C447C",tip:"What the company does"},metric:{ic:"📊",c:"#085041",tip:"Core financial numbers"},catalyst:{ic:"📰",c:"#3C3489",tip:"Recent events affecting the stock"},development:{ic:"📰",c:"#3C3489"},risk:{ic:"⚠️",c:"#991B1B",tip:"Threats to the company"},bull:{ic:"⚖️",c:"#854D0E",tip:"Bull = buy, Bear = avoid"},peer:{ic:"🔍",c:"#9A3412",tip:"Comparison with rivals"},competit:{ic:"🔍",c:"#9A3412"},landscape:{ic:"🔍",c:"#9A3412"},thesis:{ic:"📋",c:"#166534",tip:"The bottom line"},summary:{ic:"📋",c:"#166534"}};
-function getSS(t){const l=t.toLowerCase();for(const[k,v]of Object.entries(secStyles)){if(l.includes(k))return v;}if(l.match(/financial|key data/))return secStyles.metric;if(l.match(/news|recent|event/))return secStyles.catalyst;if(l.match(/threat|concern|challenge/))return secStyles.risk;if(l.match(/case|argument/))return secStyles.bull;if(l.match(/competitor|versus|comparison/))return secStyles.peer;if(l.match(/verdict|conclusion|recommendation/))return secStyles.thesis;return{ic:"📄",c:"#444",tip:""};}
+const secStyles={overview:{ic:"🏢",c:"#0369a1",tip:"Company profile and market position"},metric:{ic:"📊",c:"#059669",tip:"Core financial numbers at a glance"},catalyst:{ic:"📰",c:"#0ea5e9",tip:"Recent events that could move the stock"},development:{ic:"📰",c:"#0ea5e9"},risk:{ic:"⚠️",c:"#dc2626",tip:"Threats and challenges facing the company"},bull:{ic:"⚖️",c:"#854D0E",tip:"Bull = reasons to buy, Bear = reasons to avoid"},peer:{ic:"🔍",c:"#c2410c",tip:"How this company compares to rivals"},competit:{ic:"🔍",c:"#c2410c"},landscape:{ic:"🔍",c:"#c2410c"},thesis:{ic:"📋",c:"#059669",tip:"The bottom line — buy, hold, or avoid?"},summary:{ic:"📋",c:"#059669"}};
+function getSS(t){const l=t.toLowerCase();for(const[k,v]of Object.entries(secStyles)){if(l.includes(k))return v;}if(l.match(/financial|key data/))return secStyles.metric;if(l.match(/news|recent|event/))return secStyles.catalyst;if(l.match(/threat|concern|challenge/))return secStyles.risk;if(l.match(/case|argument/))return secStyles.bull;if(l.match(/competitor|versus|comparison/))return secStyles.peer;if(l.match(/verdict|conclusion|recommendation/))return secStyles.thesis;return{ic:"📄",c:"var(--muted)",tip:""};}
+
 picks.forEach(p=>{const b=document.createElement("button");b.textContent=`${p.f} ${p.t}`;b.onclick=()=>{document.getElementById("ticker").value=p.t;analyzeSingle();};document.getElementById("picks-single").appendChild(b);});
 comparePairs.forEach(p=>{const b=document.createElement("button");b.textContent=`${p.a} vs ${p.b}`;b.onclick=()=>{document.getElementById("ticker-a").value=p.a;document.getElementById("ticker-b").value=p.b;analyzeCompare();};document.getElementById("picks-compare").appendChild(b);});
+
 function switchTab(t){document.querySelectorAll(".tab").forEach((el,i)=>el.classList.toggle("active",(t==="single"?0:1)===i));document.getElementById("panel-single").classList.toggle("show",t==="single");document.getElementById("panel-compare").classList.toggle("show",t==="compare");}
 document.getElementById("ticker").addEventListener("keydown",e=>{if(e.key==="Enter")analyzeSingle();});
 document.getElementById("ticker-a").addEventListener("keydown",e=>{if(e.key==="Enter")analyzeCompare();});
 document.getElementById("ticker-b").addEventListener("keydown",e=>{if(e.key==="Enter")analyzeCompare();});
+
 async function callAPI(ticker){const res=await fetch("/api/generate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({ticker})});const data=await res.json();if(data.error)throw new Error(data.error);if(!data.text||data.text.length<100)throw new Error("Response too short. Try a well-known stock.");return data.text;}
-function showLoading(el,tk){const steps=["Pulling company profile...","Analyzing financials...","Scanning catalysts...","Evaluating risks...","Building thesis...","Generating brief..."];let step=0;const render=()=>{el.innerHTML=`<div class="loading"><div class="spinner"></div><h3>Researching ${tk}</h3><p>${steps[Math.min(step,5)]}</p><div class="pbar"><div class="pbar-fill" style="width:${((step+1)/6)*100}%"></div></div></div>`;};render();return setInterval(()=>{step=Math.min(step+1,5);render();},2200);}
-async function analyzeSingle(){const tk=document.getElementById("ticker").value.trim().toUpperCase();if(!tk)return;const out=document.getElementById("output-single");const btn=document.getElementById("go");btn.disabled=true;btn.textContent="Analyzing...";document.querySelectorAll("#picks-single button").forEach(b=>b.classList.toggle("active",b.textContent.includes(tk)));const iv=showLoading(out,tk);try{const text=await callAPI(tk);clearInterval(iv);out.innerHTML=renderBrief(tk,text);}catch(e){clearInterval(iv);out.innerHTML=`<div class="error">${e.message}<button onclick="analyzeSingle()">Retry</button></div>`;}btn.disabled=false;btn.textContent="Generate →";}
-async function analyzeCompare(){const a=document.getElementById("ticker-a").value.trim().toUpperCase();const b=document.getElementById("ticker-b").value.trim().toUpperCase();if(!a||!b)return;const out=document.getElementById("output-compare");const btn=document.getElementById("go-compare");btn.disabled=true;btn.textContent="Comparing...";out.innerHTML=`<div class="compare-results"><div id="comp-a"></div><div id="comp-b"></div></div>`;const ivA=showLoading(document.getElementById("comp-a"),a);try{const txtA=await callAPI(a);clearInterval(ivA);document.getElementById("comp-a").innerHTML=renderBrief(a,txtA);}catch(e){clearInterval(ivA);document.getElementById("comp-a").innerHTML=`<div class="error">${e.message}<button onclick="analyzeCompare()">Retry</button></div>`;}const ivB=showLoading(document.getElementById("comp-b"),b);try{const txtB=await callAPI(b);clearInterval(ivB);document.getElementById("comp-b").innerHTML=renderBrief(b,txtB);}catch(e){clearInterval(ivB);document.getElementById("comp-b").innerHTML=`<div class="error">${e.message}<button onclick="analyzeCompare()">Retry</button></div>`;}btn.disabled=false;btn.textContent="Compare →";}
-function renderBrief(tk,text){const sections=parseSections(text);const outlook=getOutlook(text);const bc=outlook==="Bullish"?"badge-bull":outlook==="Bearish"?"badge-bear":"badge-neutral";const em=outlook==="Bullish"?"🟢":outlook==="Bearish"?"🔴":"🟡";const date=new Date().toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"});let h=`<div class="result-hdr"><h2>${tk}</h2><span class="badge ${bc}">${em} ${outlook}</span></div><div class="meta">${date} • AI-generated research brief</div><div class="toolbar"><button class="btn-pdf" onclick="exportPDF('${tk}')">📄 Export PDF</button><button class="btn-new" onclick="document.getElementById('ticker').value='';document.getElementById('ticker').focus()">+ New Brief</button></div>`;sections.forEach(sec=>{const s=getSS(sec.t);const isBB=sec.t.toLowerCase().includes("bull")&&sec.t.toLowerCase().includes("bear");h+=`<div class="sec"><div class="sec-hdr"><span class="icon">${s.ic}</span><span class="label" style="color:${s.c}">${sec.t}</span><div class="line" style="background:${s.c}22"></div>${s.tip?`<span class="hint" style="background:${s.c}15;color:${s.c}" title="${s.tip}">?</span>`:""}</div>`;if(sec.t.toLowerCase().match(/metric|financial|key data/))h+=renderMetrics(sec.c);else if(sec.t.toLowerCase().match(/catalyst|development|recent|news|event/))h+=renderCatalysts(sec.c);else if(sec.t.toLowerCase().match(/risk|threat|challenge|concern/))h+=renderRisks(sec.c);else if(isBB)h+=renderBullBear(sec.c);else if(sec.t.toLowerCase().match(/thesis|summary|verdict|conclusion|recommendation/))h+=`<div class="thesis-box">${fmtTxt(sec.c)}</div>`;else if(sec.t.toLowerCase().match(/competit|landscape|peer|comparison/))h+=renderPeers(sec.c);else h+=`<div class="sec-body">${fmtTxt(sec.c)}</div>`;h+=`</div>`;});h+=`<div class="disc">AI-generated equity research brief for informational purposes only. Not financial advice. Always conduct independent due diligence.</div>`;return h;}
+
+function showLoading(el,tk){const steps=["Scanning company profile...","Crunching financial metrics...","Reviewing recent catalysts...","Stress-testing risk factors...","Modeling bull & bear scenarios...","Drafting investment thesis..."];let step=0;const render=()=>{el.innerHTML=`<div class="loading"><div class="spinner-wrap"><div class="spinner"></div><div class="spinner2"></div></div><h3>Researching ${tk}</h3><p>${steps[Math.min(step,5)]}</p><div class="pbar"><div class="pbar-fill" style="width:${((step+1)/6)*100}%"></div></div><div class="step-dots">${steps.map((_,i)=>`<div class="step-dot ${i<=step?'on':''}"></div>`).join("")}</div></div>`;};render();return setInterval(()=>{step=Math.min(step+1,5);render();},2500);}
+
+async function analyzeSingle(){const tk=document.getElementById("ticker").value.trim().toUpperCase();if(!tk)return;const out=document.getElementById("output-single");const btn=document.getElementById("go");btn.disabled=true;btn.textContent="Analyzing...";document.querySelectorAll("#picks-single button").forEach(b=>b.classList.toggle("active",b.textContent.includes(tk)));const iv=showLoading(out,tk);try{const text=await callAPI(tk);clearInterval(iv);out.innerHTML=renderBrief(tk,text);window._lastBrief={tk,text};}catch(e){clearInterval(iv);out.innerHTML=`<div class="error">⚠️ ${e.message}<button onclick="analyzeSingle()">Retry</button></div>`;}btn.disabled=false;btn.textContent="Generate →";}
+
+async function analyzeCompare(){const a=document.getElementById("ticker-a").value.trim().toUpperCase();const b=document.getElementById("ticker-b").value.trim().toUpperCase();if(!a||!b)return;const out=document.getElementById("output-compare");const btn=document.getElementById("go-compare");btn.disabled=true;btn.textContent="Comparing...";out.innerHTML=`<div class="compare-results"><div id="comp-a"></div><div id="comp-b"></div></div>`;const ivA=showLoading(document.getElementById("comp-a"),a);try{const txtA=await callAPI(a);clearInterval(ivA);document.getElementById("comp-a").innerHTML=renderBrief(a,txtA);}catch(e){clearInterval(ivA);document.getElementById("comp-a").innerHTML=`<div class="error">⚠️ ${e.message}<button onclick="analyzeCompare()">Retry</button></div>`;}const ivB=showLoading(document.getElementById("comp-b"),b);try{const txtB=await callAPI(b);clearInterval(ivB);document.getElementById("comp-b").innerHTML=renderBrief(b,txtB);}catch(e){clearInterval(ivB);document.getElementById("comp-b").innerHTML=`<div class="error">⚠️ ${e.message}<button onclick="analyzeCompare()">Retry</button></div>`;}btn.disabled=false;btn.textContent="Compare →";}
+
+function renderBrief(tk,text){const sections=parseSections(text);const outlook=getOutlook(text);const bc=outlook==="Bullish"?"badge-bull":outlook==="Bearish"?"badge-bear":"badge-neutral";const em=outlook==="Bullish"?"🟢":outlook==="Bearish"?"🔴":"🟡";const date=new Date().toLocaleDateString("en-US",{weekday:"short",month:"long",day:"numeric",year:"numeric"});const isSaved=saved.includes(tk);let h=`<div class="result-hdr"><h2>${tk}</h2><span class="badge ${bc}">${em} ${outlook}</span></div><div class="meta">${date} • AI-generated equity research brief</div><div class="toolbar"><button class="btn-pdf" onclick="downloadPDF('${tk}')">📄 Download PDF</button><button class="btn-share" onclick="shareBrief('${tk}')">🔗 Share</button><button class="btn-save" onclick="saveBrief('${tk}')">${isSaved?"⭐":"☆"} ${isSaved?"Saved":"Save"}</button><button class="btn-new" onclick="document.getElementById('ticker').value='';document.getElementById('ticker').focus()">+ New</button></div>`;sections.forEach(sec=>{const s=getSS(sec.t);const isBB=sec.t.toLowerCase().includes("bull")&&sec.t.toLowerCase().includes("bear");h+=`<div class="sec"><div class="sec-hdr"><span class="icon">${s.ic}</span><span class="label" style="color:${s.c}">${sec.t}</span><div class="line"></div>${s.tip?`<span class="hint" title="${s.tip}">?</span>`:""}</div><div class="sec-body">`;if(sec.t.toLowerCase().match(/metric|financial|key data/))h+=renderMetrics(sec.c);else if(sec.t.toLowerCase().match(/catalyst|development|recent|news|event/))h+=renderCatalysts(sec.c);else if(sec.t.toLowerCase().match(/risk|threat|challenge|concern/))h+=renderRisks(sec.c);else if(isBB)h+=renderBullBear(sec.c);else if(sec.t.toLowerCase().match(/thesis|summary|verdict|conclusion|recommendation/))h+=`<div class="thesis-box">${fmtTxt(sec.c)}</div>`;else if(sec.t.toLowerCase().match(/competit|landscape|peer|comparison/))h+=renderPeers(sec.c);else h+=fmtTxt(sec.c);h+=`</div></div>`;});h+=`<div class="disc">⚠️ AI-generated equity research brief for informational and educational purposes only. This is not financial advice and should not be used as the sole basis for investment decisions. Always conduct independent due diligence and consult a qualified financial advisor.</div>`;return h;}
+
 function parseSections(t){const s=[];let c=null,b=[];t.split("\n").forEach(l=>{if(/^#{1,3}\s+/.test(l)){if(c)s.push({t:c,c:b.join("\n").trim()});c=l.replace(/^#{1,3}\s+/,"").replace(/\*\*/g,"").trim();b=[];}else if(c!==null)b.push(l);});if(c)s.push({t:c,c:b.join("\n").trim()});if(s.length===0&&t.trim()){const chunks=t.split(/\n\n+/);if(chunks.length>1)chunks.forEach(ch=>{const lines=ch.trim().split("\n");const title=lines[0].replace(/\*\*/g,"").replace(/^#+\s*/,"").trim();const body=lines.slice(1).join("\n").trim();if(title&&body)s.push({t:title,c:body});});else s.push({t:"Analysis",c:t});}return s;}
 function getOutlook(t){if(/Outlook:\s*Bullish/i.test(t))return"Bullish";if(/Outlook:\s*Bearish/i.test(t))return"Bearish";return"Neutral";}
-function fmtTxt(t){return t.split("\n").map(l=>{if(!l.trim())return"<div style='height:4px'></div>";l=l.replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>");if(l.trim().startsWith("- ")||l.trim().startsWith("* "))return`<div style="padding:3px 0 3px 18px;position:relative"><span style="position:absolute;left:3px;color:#aaa">•</span>${l.trim().replace(/^[\-\*]\s+/,"")}</div>`;return`<div style="padding:2px 0">${l}</div>`;}).join("");}
-function renderMetrics(c){const lines=c.split("\n").filter(l=>l.trim());let h="";lines.forEach(l=>{const m=l.match(/\*\*(.+?)\*\*[:\s]*(.+)/);if(m)h+=`<div class="metric-row"><span class="metric-label">${m[1]}</span><span class="metric-val">${m[2].replace(/\*\*/g,"").trim()}</span></div>`;else if(l.trim().startsWith("- ")||l.trim().startsWith("* ")){const clean=l.replace(/^[\s\-\*]+/,"").trim();const parts=clean.split(/:\s*/);if(parts.length>=2)h+=`<div class="metric-row"><span class="metric-label">${parts[0].replace(/\*\*/g,"")}</span><span class="metric-val">${parts.slice(1).join(":").replace(/\*\*/g,"").trim()}</span></div>`;else h+=`<div style="padding:4px 12px;font-size:13px">${clean}</div>`;}});return h||`<div class="sec-body">${fmtTxt(c)}</div>`;}
-function renderCatalysts(c){const lines=c.split("\n").filter(l=>l.trim().match(/^[\-\*]|^\*\*/));if(!lines.length)return`<div class="sec-body">${fmtTxt(c)}</div>`;let h='<div style="border-left:2px solid #EEEDFE;margin-left:4px;padding-left:16px">';lines.forEach(l=>{const m=l.match(/\*\*(.+?)\*\*[:\s]*(.*)/);if(m)h+=`<div class="catalyst"><div class="dot"></div><div class="date">${m[1]}</div><div class="desc">${m[2].replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>")}</div></div>`;else{const clean=l.replace(/^[\s\-\*]+/,"").trim();h+=`<div class="catalyst"><div class="dot"></div><div class="desc">${clean.replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>")}</div></div>`;}});return h+"</div>";}
-function renderRisks(c){const lines=c.split("\n").filter(l=>l.trim().match(/^[\-\*]|^\*\*/));if(!lines.length)return`<div class="sec-body">${fmtTxt(c)}</div>`;let h="";lines.forEach(l=>{const m=l.match(/\*\*(.+?)\*\*[:\s]*(.*)/);if(m)h+=`<div class="risk-card"><div class="risk-title">${m[1]}</div><div class="risk-detail">${m[2].replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>")}</div></div>`;else{const clean=l.replace(/^[\s\-\*]+/,"").trim();h+=`<div class="risk-card"><div class="risk-detail">${clean.replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>")}</div></div>`;}});return h;}
-function renderPeers(c){let h="";c.split("\n").filter(l=>l.trim()).forEach(l=>{const m=l.match(/\*\*(.+?)\*\*[:\s]*(.*)/);if(m){if(m[1].toLowerCase().match(/moat|advantage/))h+=`<div style="margin-top:10px;padding:10px 14px;background:#FFF7ED;border-radius:8px;border:1px solid #FED7AA"><span style="font-size:10.5px;font-weight:700;color:#9A3412;text-transform:uppercase">${m[1]}: </span><span style="font-size:12.5px;color:#444">${m[2]}</span></div>`;else h+=`<div class="peer"><span class="peer-name">${m[1]}</span><div class="peer-desc">${m[2].replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>")}</div></div>`;}else if(l.trim().match(/^[\-\*]/)){const clean=l.replace(/^[\s\-\*]+/,"").trim();h+=`<div class="peer"><div class="peer-desc">${clean.replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>")}</div></div>`;}});return h||`<div class="sec-body">${fmtTxt(c)}</div>`;}
-function renderBullBear(c){let p=c.split(/\*\*Bear Case:?\*\*/i);if(p.length<2)p=c.split(/bear case/i);if(p.length<2)return`<div class="sec-body">${fmtTxt(c)}</div>`;const bu=(p[0]||"").replace(/\*\*Bull Case:?\*\*/i,"").replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>").trim();const be=(p[1]||"").replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>").trim();return`<div class="split"><div class="bull-box"><div class="case-label bull-label">🟢 Bull Case</div><div class="case-text">${bu}</div></div><div class="bear-box"><div class="case-label bear-label">🔴 Bear Case</div><div class="case-text">${be}</div></div></div>`;}
-function exportPDF(tk){const sections=document.querySelectorAll(".sec");const w=window.open("","_blank");let body="";sections.forEach(s=>body+=s.outerHTML);w.document.write(`<!DOCTYPE html><html><head><title>${tk} Research Brief</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Georgia,serif;max-width:700px;margin:40px auto;padding:0 24px;color:#1a1a1a;font-size:13px;line-height:1.6}h1{font-size:20px;font-family:system-ui;border-bottom:2px solid #534AB7;padding-bottom:6px;margin-bottom:16px}.sec{margin-bottom:14px}.sec-hdr{margin-bottom:6px}.sec-hdr .label{font-size:13px;font-weight:700;color:#534AB7;text-transform:uppercase}.metric-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #eee;font-size:12px}.metric-label{font-weight:600}.metric-val{font-weight:700;color:#085041}.risk-card{padding:6px 0;border-bottom:1px solid #f5f5f5}.risk-title{font-weight:700;color:#991B1B}.split{display:grid;grid-template-columns:1fr 1fr;gap:12px}.bull-box,.bear-box{padding:8px;border-radius:6px;font-size:12px}.bull-box{background:#F0FDF4;border:1px solid #BBF7D0}.bear-box{background:#FEF2F2;border:1px solid #FECACA}.case-label{font-size:10px;font-weight:700;margin-bottom:4px}.bull-label{color:#166534}.bear-label{color:#991B1B}.thesis-box{padding:10px;background:#F0FDF4;border:1px solid #A7F3D0;border-radius:6px;font-size:13px;line-height:1.7}.catalyst{padding:4px 0}.catalyst .date{font-weight:700;color:#534AB7;font-size:11px}.toolbar,.badge,.hint,.pbar,.line,.picks,.tabs,.hdr,.guide,.icon,.dot,.btn-pdf,.btn-new{display:none!important}strong{font-weight:700}</style></head><body><h1>${tk} — Equity Research Brief</h1>${body}<div style="font-size:9px;color:#aaa;margin-top:20px;padding-top:8px;border-top:1px solid #eee">AI-generated by Prem's Equity Research Copilot. Not financial advice.</div><script>setTimeout(()=>window.print(),600)<\/script></body></html>`);}
-document.getElementById("output-single").innerHTML=`<div class="empty"><div class="big">📊</div><p>Enter any stock ticker to generate a research brief</p><div class="sub">Supports NYSE, NASDAQ, NSE, BSE and more</div></div>`;
+function fmtTxt(t){return t.split("\n").map(l=>{if(!l.trim())return"<div style='height:5px'></div>";l=l.replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>");if(l.trim().startsWith("- ")||l.trim().startsWith("* "))return`<div style="padding:4px 0 4px 20px;position:relative"><span style="position:absolute;left:4px;color:var(--muted)">•</span>${l.trim().replace(/^[\-\*]\s+/,"")}</div>`;return`<div style="padding:2px 0">${l}</div>`;}).join("");}
+
+function renderMetrics(c){const lines=c.split("\n").filter(l=>l.trim());let h="";lines.forEach(l=>{const m=l.match(/\*\*(.+?)\*\*[:\s]*(.+)/);if(m)h+=`<div class="metric-row"><span class="metric-label">${m[1]}</span><span class="metric-val">${m[2].replace(/\*\*/g,"").trim()}</span></div>`;else if(l.trim().startsWith("- ")||l.trim().startsWith("* ")){const clean=l.replace(/^[\s\-\*]+/,"").trim();const parts=clean.split(/:\s*/);if(parts.length>=2)h+=`<div class="metric-row"><span class="metric-label">${parts[0].replace(/\*\*/g,"")}</span><span class="metric-val">${parts.slice(1).join(":").replace(/\*\*/g,"").trim()}</span></div>`;else h+=`<div style="padding:4px 14px;font-size:13px">${clean}</div>`;}});return h||fmtTxt(c);}
+function renderCatalysts(c){const lines=c.split("\n").filter(l=>l.trim().match(/^[\-\*]|^\*\*/));if(!lines.length)return fmtTxt(c);let h='<div style="border-left:2px solid var(--accent-light);margin-left:4px;padding-left:18px">';lines.forEach(l=>{const m=l.match(/\*\*(.+?)\*\*[:\s]*(.*)/);if(m)h+=`<div class="catalyst"><div class="dot"></div><div class="date">${m[1]}</div><div class="desc">${m[2].replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>")}</div></div>`;else{const clean=l.replace(/^[\s\-\*]+/,"").trim();h+=`<div class="catalyst"><div class="dot"></div><div class="desc">${clean.replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>")}</div></div>`;}});return h+"</div>";}
+function renderRisks(c){const lines=c.split("\n").filter(l=>l.trim().match(/^[\-\*]|^\*\*/));if(!lines.length)return fmtTxt(c);let h="";lines.forEach(l=>{const m=l.match(/\*\*(.+?)\*\*[:\s]*(.*)/);if(m)h+=`<div class="risk-card"><div class="risk-title">${m[1]}</div><div class="risk-detail">${m[2].replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>")}</div></div>`;else{const clean=l.replace(/^[\s\-\*]+/,"").trim();h+=`<div class="risk-card"><div class="risk-detail">${clean.replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>")}</div></div>`;}});return h;}
+function renderPeers(c){let h="";c.split("\n").filter(l=>l.trim()).forEach(l=>{const m=l.match(/\*\*(.+?)\*\*[:\s]*(.*)/);if(m){if(m[1].toLowerCase().match(/moat|advantage/))h+=`<div class="moat-box"><span style="font-size:11px;font-weight:700;color:#c2410c;text-transform:uppercase;letter-spacing:.3px">🏰 ${m[1]}: </span><span style="font-size:13px;color:var(--text)">${m[2]}</span></div>`;else h+=`<div class="peer"><span class="peer-name">${m[1]}</span><div class="peer-desc">${m[2].replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>")}</div></div>`;}else if(l.trim().match(/^[\-\*]/)){const clean=l.replace(/^[\s\-\*]+/,"").trim();h+=`<div class="peer"><div class="peer-desc">${clean.replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>")}</div></div>`;}});return h||fmtTxt(c);}
+function renderBullBear(c){let p=c.split(/\*\*Bear Case:?\*\*/i);if(p.length<2)p=c.split(/bear case/i);if(p.length<2)return fmtTxt(c);const bu=(p[0]||"").replace(/\*\*Bull Case:?\*\*/i,"").replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>").trim();const be=(p[1]||"").replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>").trim();return`<div class="split"><div class="bull-box"><div class="case-label bull-label">🟢 Bull Case</div><div class="case-text">${bu}</div></div><div class="bear-box"><div class="case-label bear-label">🔴 Bear Case</div><div class="case-text">${be}</div></div></div>`;}
+
+function downloadPDF(tk){const secs=document.querySelectorAll(".sec");let body="";secs.forEach(s=>body+=s.outerHTML);const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${tk} — Equity Research Brief</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Georgia,serif;max-width:700px;margin:40px auto;padding:0 24px;color:#1a1a1a;font-size:13px;line-height:1.7}h1{font-size:22px;font-family:system-ui,sans-serif;border-bottom:3px solid #534AB7;padding-bottom:8px;margin-bottom:6px}h2{font-size:11px;color:#534AB7;margin-bottom:12px}.sec{margin-bottom:16px;border:1px solid #e5e5e5;border-radius:8px;overflow:hidden;page-break-inside:avoid}.sec-hdr{padding:8px 14px;background:#f8f7ff;border-bottom:1px solid #e5e5e5}.sec-hdr .label{font-size:12px;font-weight:700;color:#534AB7;text-transform:uppercase}.sec-body{padding:12px 14px;font-size:12px;line-height:1.7}.metric-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f0f0f0;font-size:12px}.metric-label{font-weight:600;color:#666}.metric-val{font-weight:800;color:#059669}.risk-card{padding:8px 12px;margin-bottom:4px;border-left:3px solid #f87171;background:#fff5f5;border-radius:4px}.risk-title{font-weight:700;color:#dc2626;font-size:11px}.risk-detail{font-size:11px;color:#555}.split{display:grid;grid-template-columns:1fr 1fr;gap:10px}.bull-box,.bear-box{padding:10px;border-radius:8px;font-size:11px}.bull-box{background:#f0fdf4;border:1px solid #86efac}.bear-box{background:#fef2f2;border:1px solid #fca5a5}.case-label{font-size:9px;font-weight:700;margin-bottom:4px;text-transform:uppercase}.bull-label{color:#16a34a}.bear-label{color:#dc2626}.thesis-box{padding:12px;background:#f0fdf4;border:1px solid #86efac;border-radius:8px;font-size:12px;line-height:1.7}.catalyst{padding:4px 0;font-size:12px}.catalyst .date{font-weight:700;color:#534AB7;font-size:10px}.peer{padding:6px 0;border-bottom:1px solid #f5f5f5;font-size:11px}.peer-name{font-weight:700;color:#c2410c}.icon,.dot,.hint,.line,.spinner,.spinner2,.pbar,.step-dots,.toolbar{display:none!important}strong{font-weight:700}</style></head><body><h1>${tk} — Equity Research Brief</h1><h2>Generated ${new Date().toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"})} • AI Equity Research Copilot by Prem Acharya</h2>${body}<div style="font-size:9px;color:#aaa;margin-top:24px;padding-top:10px;border-top:1px solid #e5e5e5">AI-generated equity research brief for informational purposes only. Not financial advice. Always conduct independent due diligence.</div></body></html>`;const blob=new Blob([html],{type:"text/html"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`${tk}_Research_Brief.html`;a.click();showToast(`📄 ${tk} brief downloaded!`);}
+
+function shareBrief(tk){const url=window.location.href;navigator.clipboard.writeText(url+"?ticker="+tk).then(()=>showToast("🔗 Link copied to clipboard!")).catch(()=>showToast("Copy this URL: "+url));}
+
+function saveBrief(tk){const idx=saved.indexOf(tk);if(idx===-1){saved.push(tk);showToast(`⭐ ${tk} saved to bookmarks!`);}else{saved.splice(idx,1);showToast(`☆ ${tk} removed from bookmarks`);}localStorage.setItem("savedBriefs",JSON.stringify(saved));if(window._lastBrief?.tk===tk){document.getElementById("output-single").innerHTML=renderBrief(tk,window._lastBrief.text);}}
+
+// Auto-analyze from URL param
+const urlTicker=new URLSearchParams(window.location.search).get("ticker");
+if(urlTicker){document.getElementById("ticker").value=urlTicker;setTimeout(()=>analyzeSingle(),500);}
+
+document.getElementById("output-single").innerHTML=`<div class="empty"><div class="big">📊</div><p>Enter any stock ticker to generate a research brief</p><div class="sub">Supports NYSE, NASDAQ, NSE, BSE and 50+ global exchanges</div></div>`;
 document.getElementById("output-compare").innerHTML=`<div class="empty"><div class="big">⚖️</div><p>Enter two tickers or pick a suggested pair</p><div class="sub">See two companies analyzed side by side</div></div>`;
 </script>
 </body>

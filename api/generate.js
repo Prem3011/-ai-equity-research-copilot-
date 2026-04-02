@@ -12,45 +12,72 @@ export default async function handler(req, res) {
   const API_KEY = process.env.GEMINI_API_KEY;
   if (!API_KEY) return res.status(500).json({ error: "API key not configured" });
 
-  const prompt = `You are a senior equity research analyst at Goldman Sachs. Generate a detailed, data-rich equity research brief for: ${ticker}.
+  const prompt = `You are a senior equity research analyst at Goldman Sachs known for BALANCED, UNBIASED analysis. Generate a detailed equity research brief for: ${ticker}.
 
-IMPORTANT: Search for the LATEST available data — current stock price, most recent quarterly earnings, latest news. Use today's date as reference.
+CRITICAL RULES FOR AVOIDING BIAS:
+- Give EQUAL depth to positive AND negative factors
+- Do NOT default to Bullish — assign Bearish or Neutral when the evidence supports it
+- Every bullish claim MUST be paired with a specific counter-argument
+- Use CONCRETE numbers for both upside AND downside scenarios
+- If the stock is overvalued by standard metrics, SAY SO clearly
 
-Use INR (₹) for Indian stocks (NSE/BSE). Use USD ($) for US stocks. Be specific with real, current numbers. Write authoritatively. Do NOT mention data limitations.
+Search for the LATEST available data — current stock price, most recent quarterly earnings, latest news. Use today's date as reference.
 
-Use EXACTLY these ## markdown headers:
+Use INR (₹) for Indian stocks (NSE/BSE). Use USD ($) for US stocks.
+
+Use EXACTLY these ## markdown headers in this order:
 
 ## Company Overview
 3-4 sentences: business, CEO, HQ, employees, segments, market position. Use current data.
 
+## Sentiment Score
+On the FIRST line, write ONLY a number from 1-10 (where 1=extremely bearish, 5=neutral, 10=extremely bullish).
+On the second line, write one sentence explaining the score.
+Be honest — most stocks should score 4-7, not 8-10.
+
 ## Key Financial Metrics
-Bullets with **Label**: Value format. Use the MOST RECENT data available:
-- **Market Cap**: [current number]
-- **Stock Price**: [current/latest price]
-- **P/E Ratio**: [current number]
-- **Revenue (Latest)**: [most recent reported quarter or year + period]
+Use the MOST RECENT data:
+- **Market Cap**: [current]
+- **Stock Price**: [current/latest]
+- **P/E Ratio**: [current]
+- **Revenue (Latest)**: [most recent quarter/year + period]
 - **Net Profit Margin**: [%]
 - **ROE**: [%]
 - **Debt/Equity**: [ratio]
 - **EPS (TTM)**: [amount]
 - **Dividend Yield**: [% or N/A]
 
+## Latest News Headlines
+5 bullet points of the MOST RECENT news (within last 1-3 months). Each must start with **[Date]:** followed by headline and 1 sentence of context. Search for the latest news.
+
 ## Recent Catalysts & Developments
-4 bullets starting with **[Date/Quarter]:** then 2 sentences with specific numbers. Use the MOST RECENT events — within the last 3-6 months.
+4 bullets starting with **[Date/Quarter]:** then 2 sentences with numbers.
 
 ## Risk Factors
-4 bullets starting with **[Risk Title]:** then 2 sentences specific to this company's CURRENT situation.
+4 bullets starting with **[Risk Title]:** then 2 sentences specific to this company's CURRENT situation. Be specific and unflinching.
 
 ## Bull Case vs Bear Case
-**Bull Case:** 3 sentences with specific current growth drivers and numbers.
-**Bear Case:** 3 sentences with specific current concerns and numbers.
+**Bull Case:** 3 sentences with specific numbers and growth targets.
+**Bear Case:** 3 sentences with specific downside risks and numbers. Give this EQUAL weight to bull case.
+
+## Contrarian View
+Write 3-4 sentences arguing AGAINST the consensus view on this stock. If most analysts are bullish, argue bearish and vice versa. Include specific data points. This section must genuinely challenge the prevailing narrative.
+
+## Confidence Assessment
+- **Data Freshness**: [High/Medium/Low — how recent is the data used]
+- **Analyst Consensus Alignment**: [Agrees/Partially Agrees/Disagrees with consensus]
+- **Confidence Level**: [High/Medium/Low — how confident in this analysis]
+- **Key Uncertainty**: [One sentence on the biggest unknown]
 
 ## Competitive Landscape
-3 bullets: **[Competitor]**: 1-2 sentences comparing current market positions.
+3 bullets: **[Competitor]**: 1-2 sentences.
 Then: **Competitive Moat:** 2 sentences.
 
+## Executive Summary
+Write EXACTLY 2 sentences that capture the entire investment thesis. This should be quotable — imagine a portfolio manager reading just this section. End with: **Outlook: Bullish** or **Outlook: Neutral** or **Outlook: Bearish**
+
 ## Investment Thesis
-4 sentences reflecting CURRENT market conditions. End with exactly: **Outlook: Bullish** or **Outlook: Neutral** or **Outlook: Bearish**`;
+4-5 sentences reflecting CURRENT market conditions. Reference specific metrics. End with EXACTLY: **Outlook: Bullish** or **Outlook: Neutral** or **Outlook: Bearish**`;
 
   try {
     const response = await fetch(
@@ -61,7 +88,7 @@ Then: **Competitive Moat:** 2 sentences.
         body: JSON.stringify({
           contents: [{ parts: [{ text: prompt }] }],
           tools: [{ google_search: {} }],
-          generationConfig: { maxOutputTokens: 4000, temperature: 1.0 },
+          generationConfig: { maxOutputTokens: 5000, temperature: 1.0 },
         }),
       }
     );
